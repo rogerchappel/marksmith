@@ -1,8 +1,8 @@
-# Task Brief: Implement core HTML to Markdown conversion
+# Task Brief: Implement HTML and URL input parsing for local Markdown conversion
 
 ## Objective
 
-Develop the core functionality to convert pasted HTML or URLs into cleaned Markdown including title, links, code blocks, and metadata
+Enable users to paste HTML or provide a URL to convert content into clean Markdown locally
 
 ## Repository
 
@@ -10,7 +10,7 @@ marksmith
 
 ## Suggested Branch
 
-agent/implement-core-html-to-markdown-conversion
+agent/implement-html-and-url-input-parsing-for-local-markdown-conversion
 
 ## Task Type
 
@@ -24,34 +24,36 @@ Medium
 
 Source: llm (openai:gpt-4.1-mini)
 
-This is the main feature of marksmith to enable local conversion of messy HTML to clean Markdown for agent workflows
+V1 scope requires accepting pasted HTML or URLs and converting them to Markdown with title, links, code blocks, and metadata
 
 ## Allowed Paths
 
-- src/converter/*
-- src/utils/*
+- src/parser
+- src/converter
+- src/cli
 
 ## Forbidden Paths
 
-- src/network/*
-- src/cloud/*
+- src/cloud
+- src/llm
+- src/network
 
 ## Expected Commits
 
-- feat: add HTML to Markdown conversion core logic
-- test: add unit tests for HTML parsing and Markdown generation
-- docs: update README with install and quickstart
+- Add HTML input parser
+- Add URL fetch and parse module
+- Integrate parsing with Markdown converter
 
 ## Verification
 
-- Unit tests covering parsing and generation of Markdown from HTML fixtures
-- No network calls unless URL explicitly provided
-- README updated with usage instructions
+- Unit tests for HTML and URL input parsing
+- Fixture tests for conversion accuracy
+- Manual test of local conversion from pasted HTML and URL
 
 ## Stop Conditions
 
-- Core conversion passes all unit tests
-- No hidden network or credential usage detected
+- HTML and URL inputs convert correctly to Markdown with expected elements
+- No network calls occur unless URL is explicitly provided
 
 ## Review Pack Required
 
@@ -63,15 +65,15 @@ Yes.
 
 ## Agent Prompt
 
-Build `marksmith` as a deterministic local-first Markdown converter with fixtures from messy HTML pages. Avoid hidden network calls unless user supplies a URL explicitly.
+Build deterministic local-first Markdown converter input handling for pasted HTML and URLs, avoiding hidden network calls unless URL is explicit.
 
 ---
 
-# Task Brief: Add batch folder conversion feature
+# Task Brief: Develop batch folder conversion feature
 
 ## Objective
 
-Enable users to convert multiple HTML files in a folder to Markdown in batch mode
+Allow users to convert multiple HTML files in a folder to Markdown in batch mode
 
 ## Repository
 
@@ -79,7 +81,7 @@ marksmith
 
 ## Suggested Branch
 
-agent/add-batch-folder-conversion-feature
+agent/develop-batch-folder-conversion-feature
 
 ## Task Type
 
@@ -93,32 +95,34 @@ Medium
 
 Source: llm (openai:gpt-4.1-mini)
 
-Batch processing is required to handle multiple documents efficiently as part of V1 scope
+V1 scope includes batch folder conversion to improve workflow efficiency
 
 ## Allowed Paths
 
-- src/batch/*
-- src/converter/*
+- src/batch
+- src/converter
+- src/cli
 
 ## Forbidden Paths
 
-- src/network/*
-- src/cloud/*
+- src/cloud
+- src/llm
 
 ## Expected Commits
 
-- feat: add batch folder conversion support
-- test: add tests for batch processing
+- Add batch folder processing module
+- Integrate batch processing with converter
+- Add CLI commands for batch conversion
 
 ## Verification
 
 - Unit tests for batch processing logic
-- Batch conversion produces correct Markdown outputs for multiple files
+- Fixture tests for multiple file conversions
+- Manual test of batch folder conversion
 
 ## Stop Conditions
 
-- Batch conversion feature passes tests
-- No network or cloud dependencies introduced
+- Batch folder conversion completes successfully with correct Markdown output for all files
 
 ## Review Pack Required
 
@@ -130,15 +134,15 @@ Yes.
 
 ## Agent Prompt
 
-Build `marksmith` as a deterministic local-first Markdown converter with fixtures from messy HTML pages. Avoid hidden network calls unless user supplies a URL explicitly.
+Implement batch folder conversion to process multiple HTML files into Markdown locally.
 
 ---
 
-# Task Brief: Document local-first behavior and usage
+# Task Brief: Create README with install, quickstart, and safety notes
 
 ## Objective
 
-Create README content covering installation, quickstart, safety notes, and local-first behavior
+Provide clear documentation for installation, usage, and safety of the local-first Markdown converter
 
 ## Repository
 
@@ -146,7 +150,7 @@ marksmith
 
 ## Suggested Branch
 
-agent/document-local-first-behavior-and-usage
+agent/create-readme-with-install-quickstart-and-safety-notes
 
 ## Task Type
 
@@ -160,28 +164,32 @@ Low
 
 Source: llm (openai:gpt-4.1-mini)
 
-Clear documentation is essential for user adoption and to clarify no hidden network or credential usage
+Verification requires README to cover install, quickstart, and safety notes including no hidden network or credential behavior
 
 ## Allowed Paths
 
 - README.md
+- docs/
 
 ## Forbidden Paths
 
-- src/*
+- src/
 
 ## Expected Commits
 
-- docs: add install, quickstart, and safety notes to README
+- Add install instructions
+- Add quickstart guide
+- Add safety and local-first behavior notes
 
 ## Verification
 
-- README includes install instructions, quickstart guide, and safety notes
-- Local-first behavior clearly documented
+- README includes install instructions
+- README includes quickstart guide
+- README documents local-first behavior and safety notes
 
 ## Stop Conditions
 
-- README reviewed and approved
+- README is complete and reviewed for clarity and accuracy
 
 ## Review Pack Required
 
@@ -193,4 +201,73 @@ No.
 
 ## Agent Prompt
 
-Build `marksmith` as a deterministic local-first Markdown converter with fixtures from messy HTML pages. Avoid hidden network calls unless user supplies a URL explicitly.
+Write comprehensive README covering installation, quickstart, and safety notes emphasizing local-first behavior.
+
+---
+
+# Task Brief: Add unit and fixture tests for core parsing and Markdown generation
+
+## Objective
+
+Ensure core parsing and Markdown generation behave correctly and deterministically
+
+## Repository
+
+marksmith
+
+## Suggested Branch
+
+agent/add-unit-and-fixture-tests-for-core-parsing-and-markdown-generation
+
+## Task Type
+
+test
+
+## Risk Level
+
+Low
+
+## Context
+
+Source: llm (openai:gpt-4.1-mini)
+
+Verification requires unit or fixture tests for core parsing and generation behavior
+
+## Allowed Paths
+
+- tests/
+- src/parser
+- src/converter
+
+## Forbidden Paths
+
+- src/cloud
+- src/llm
+
+## Expected Commits
+
+- Add unit tests for HTML parsing
+- Add fixture tests for Markdown output
+- Integrate tests into CI pipeline
+
+## Verification
+
+- Unit tests cover parsing edge cases
+- Fixture tests validate Markdown output correctness
+- Tests run successfully in CI
+
+## Stop Conditions
+
+- All core parsing and generation tests pass reliably
+
+## Review Pack Required
+
+Yes.
+
+## Human Decision Needed
+
+- None
+
+## Agent Prompt
+
+Develop comprehensive unit and fixture tests for core HTML parsing and Markdown generation modules.
