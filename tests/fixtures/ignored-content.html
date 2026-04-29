@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Content Removal Test</title>
+    <style>
+      body { font-family: Arial; }
+      .hidden { display: none; }
+    </style>
+    <script>
+      console.log('tracked');
+      window.analytics = { track: () => {} };
+    </script>
+    <noscript>Enable JavaScript</noscript>
+    <!-- This comment should be removed -->
+  </head>
+  <body>
+    <article>
+      <h1>Clean Content</h1>
+      <p>This paragraph should remain.</p>
+      <!-- Inline comment to remove -->
+      <p>Another paragraph after ignored content.</p>
+    </article>
+  </body>
+</html>

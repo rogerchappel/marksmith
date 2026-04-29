@@ -15,7 +15,15 @@ export async function convertInputToMarkdown(input, options = {}) {
 }
 
 export function htmlToMarkdown(html, metadata = extractHtmlMetadata(html)) {
-  const prepared = removeIgnoredContent(String(html || ''));
+  if (typeof html !== 'string') {
+    throw new TypeError('htmlToMarkdown expected a string of HTML');
+  }
+
+  if (html.trim() === '') {
+    return '';
+  }
+
+  const prepared = removeIgnoredContent(html);
   const body = extractMainContent(prepared);
   const title = metadata?.title || extractHtmlMetadata(html).title;
   const markdown = removeDuplicateTitleHeading(convertBlockHtml(body), title)
@@ -62,7 +70,7 @@ function convertBlockHtml(html) {
   output = output.replace(/<br\s*\/?>/gi, '\n');
   output = output.replace(/<hr\s*\/?>/gi, '\n\n---\n\n');
   output = output.replace(/<\/div>|<\/section>|<\/article>|<\/main>|<\/header>|<\/footer>|<\/nav>/gi, '\n\n');
-  output = output.replace(/<[^>]+>/g, ' ');
+  output = output.replace(/<\/?[a-z][^>]*>/gi, ' ');
 
   return decodeHtml(output)
     .split('\n')
@@ -91,7 +99,7 @@ function inlineMarkdown(html) {
 }
 
 function stripTags(value) {
-  return String(value || '').replace(/<[^>]+>/g, ' ');
+  return String(value || '').replace(/<\/?[a-z][^>]*>/gi, ' ');
 }
 
 function removeDuplicateTitleHeading(markdown, title) {
