@@ -35,12 +35,17 @@ export async function fetchUrlInput(url, options = {}) {
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
-    const response = await fetchImpl(parsed.href, {
-      method: 'GET',
-      redirect: 'follow',
-      headers,
-      signal: controller.signal
-    });
+    const response = await Promise.race([
+      fetchImpl(parsed.href, {
+        method: 'GET',
+        redirect: 'follow',
+        headers,
+        signal: controller.signal
+      }),
+      new Promise((_, reject) => {
+        controller.signal.addEventListener('abort', () => reject(new Error('Fetch aborted by timeout')), { once: true });
+      })
+    ]);
 
     if (!response || !response.ok) {
       const status = response ? `${response.status} ${response.statusText || ''}`.trim() : 'no response';

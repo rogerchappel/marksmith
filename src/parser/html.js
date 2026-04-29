@@ -81,5 +81,5 @@ function firstMatch(value, regex) {
 }
 
 function stripTags(value) {
-  return String(value || '').replace(/<[^>]+>/g, ' ');
+  return String(value || '').replace(/<\/?[a-z][^>]*>/gi, ' ').replace(/[ \t]{2,}/g, ' ');
 }
