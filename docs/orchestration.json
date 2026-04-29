@@ -1,0 +1,138 @@
+{
+  "version": "0.1",
+  "source": "taskbrief-orchestration",
+  "workspace": "default",
+  "repo": "marksmith",
+  "generated_from": "taskbrief + llm-orchestration (openai:gpt-4.1-mini)",
+  "summary": {
+    "total_tasks": 4,
+    "dispatchable_now": [
+      "marksmith-implement-html-and-url-input-parsing-for-local-markdown-conversion",
+      "marksmith-develop-batch-folder-conversion-feature"
+    ],
+    "blocked_tasks": [],
+    "final_validation_task_ids": []
+  },
+  "waves": [
+    {
+      "wave": 1,
+      "name": "Implementation",
+      "mode": "concurrent",
+      "dispatch": "now",
+      "task_ids": [
+        "marksmith-implement-html-and-url-input-parsing-for-local-markdown-conversion",
+        "marksmith-develop-batch-folder-conversion-feature"
+      ]
+    },
+    {
+      "wave": 2,
+      "name": "Verification / tests",
+      "mode": "sequential",
+      "dispatch": "after_dependencies",
+      "task_ids": [
+        "marksmith-add-unit-and-fixture-tests-for-core-parsing-and-markdown-generation"
+      ]
+    },
+    {
+      "wave": 3,
+      "name": "Documentation / examples",
+      "mode": "sequential",
+      "dispatch": "after_dependencies",
+      "task_ids": [
+        "marksmith-create-readme-with-install-quickstart-and-safety-notes"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "marksmith-implement-html-and-url-input-parsing-for-local-markdown-conversion",
+      "title": "Implement HTML and URL input parsing for local Markdown conversion",
+      "repo": "marksmith",
+      "branch": "agent/implement-html-and-url-input-parsing-for-local-markdown-conversion",
+      "type": "feature",
+      "risk": "medium",
+      "phase": "implementation",
+      "depends_on": [],
+      "can_run_concurrently_with": [
+        "marksmith-develop-batch-folder-conversion-feature"
+      ],
+      "dispatchable": true,
+      "blocked_by": [],
+      "verification": [
+        "Unit tests for HTML and URL input parsing",
+        "Fixture tests for conversion accuracy",
+        "Manual test of local conversion from pasted HTML and URL"
+      ]
+    },
+    {
+      "id": "marksmith-develop-batch-folder-conversion-feature",
+      "title": "Develop batch folder conversion feature",
+      "repo": "marksmith",
+      "branch": "agent/develop-batch-folder-conversion-feature",
+      "type": "feature",
+      "risk": "medium",
+      "phase": "implementation",
+      "depends_on": [],
+      "can_run_concurrently_with": [
+        "marksmith-implement-html-and-url-input-parsing-for-local-markdown-conversion"
+      ],
+      "dispatchable": true,
+      "blocked_by": [],
+      "verification": [
+        "Unit tests for batch processing logic",
+        "Fixture tests for multiple file conversions",
+        "Manual test of batch folder conversion"
+      ]
+    },
+    {
+      "id": "marksmith-add-unit-and-fixture-tests-for-core-parsing-and-markdown-generation",
+      "title": "Add unit and fixture tests for core parsing and Markdown generation",
+      "repo": "marksmith",
+      "branch": "agent/add-unit-and-fixture-tests-for-core-parsing-and-markdown-generation",
+      "type": "test",
+      "risk": "low",
+      "phase": "verification",
+      "depends_on": [
+        "marksmith-implement-html-and-url-input-parsing-for-local-markdown-conversion",
+        "marksmith-develop-batch-folder-conversion-feature"
+      ],
+      "can_run_concurrently_with": [],
+      "dispatchable": false,
+      "blocked_by": [],
+      "verification": [
+        "Unit tests cover parsing edge cases",
+        "Fixture tests validate Markdown output correctness",
+        "Tests run successfully in CI"
+      ]
+    },
+    {
+      "id": "marksmith-create-readme-with-install-quickstart-and-safety-notes",
+      "title": "Create README with install, quickstart, and safety notes",
+      "repo": "marksmith",
+      "branch": "agent/create-readme-with-install-quickstart-and-safety-notes",
+      "type": "documentation",
+      "risk": "low",
+      "phase": "documentation",
+      "depends_on": [
+        "marksmith-implement-html-and-url-input-parsing-for-local-markdown-conversion",
+        "marksmith-develop-batch-folder-conversion-feature",
+        "marksmith-add-unit-and-fixture-tests-for-core-parsing-and-markdown-generation"
+      ],
+      "can_run_concurrently_with": [],
+      "dispatchable": false,
+      "blocked_by": [],
+      "verification": [
+        "README includes install instructions",
+        "README includes quickstart guide",
+        "README documents local-first behavior and safety notes"
+      ]
+    }
+  ],
+  "dispatch_prompt": "Dispatch Wave 1 first. These tasks may run concurrently:\n- marksmith-implement-html-and-url-input-parsing-for-local-markdown-conversion\n- marksmith-develop-batch-folder-conversion-feature\nWait for the whole wave to finish and pass verification before dispatching the next sequential wave.",
+  "refinement_notes": [
+    "The two implementation tasks have no dependencies and can run concurrently in the first wave.",
+    "The verification tests depend on both implementation tasks and must run after them, so they are placed in the second wave sequentially.",
+    "The documentation depends on both implementation tasks and the verification tests, so it is placed last in the third wave sequentially.",
+    "This sequencing respects all dependencies and keeps tasks concurrent only when safe and independent."
+  ]
+}
