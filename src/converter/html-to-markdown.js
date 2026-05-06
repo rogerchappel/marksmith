@@ -11,7 +11,10 @@ export async function convertInputToMarkdown(input, options = {}) {
     return parsed.text.trimEnd() + '\n';
   }
 
-  return htmlToMarkdown(parsed.html, parsed.metadata);
+  return htmlToMarkdown(parsed.html, {
+    ...parsed.metadata,
+    includeTitle: options.includeTitle !== false,
+  });
 }
 
 export function htmlToMarkdown(html, metadata = extractHtmlMetadata(html)) {
@@ -33,7 +36,7 @@ export function htmlToMarkdown(html, metadata = extractHtmlMetadata(html)) {
 
   const parts = [];
 
-  if (title) parts.push(`# ${escapeMarkdown(title)}`);
+  if (metadata?.includeTitle !== false && title) parts.push(`# ${escapeMarkdown(title)}`);
   if (metadata?.sourceUrl) parts.push(`Source: ${metadata.sourceUrl}`);
   if (markdown) parts.push(markdown);
 

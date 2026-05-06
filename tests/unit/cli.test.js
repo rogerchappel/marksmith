@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import path from 'node:path';
-import { mkdtemp, mkdir, readdir, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 
 import { run } from '../../src/cli/index.js';
@@ -39,9 +39,57 @@ test('cli batch command with --no-title flag', async () => {
     console.log = originalLog;
   }
 
-  const { readFile } = await import('node:fs/promises');
   const alpha = await readFile(path.join(outputDir, 'alpha.md'), 'utf8');
   assert.doesNotMatch(alpha, /^# Alpha Doc\n/);
+});
+
+
+test('cli convert command writes one markdown document to stdout', async () => {
+  const inputDir = await mkdtemp(path.join(tmpdir(), 'marksmith-cli-convert-'));
+  const inputFile = path.join(inputDir, 'single.html');
+  await writeFile(inputFile, '<html><head><title>One Doc</title></head><body><p>Hello <strong>local</strong>.</p></body></html>');
+
+  let output = '';
+  const originalWrite = process.stdout.write;
+  process.stdout.write = (chunk) => {
+    output += String(chunk);
+    return true;
+  };
+
+  try {
+    const exitCode = await run(['convert', '--input', inputFile]);
+    assert.equal(exitCode, 0);
+  } finally {
+    process.stdout.write = originalWrite;
+  }
+
+  assert.match(output, /^# One Doc/);
+  assert.match(output, /Hello \*\*local\*\*\./);
+});
+
+test('cli convert command writes one markdown document to a file', async () => {
+  const inputDir = await mkdtemp(path.join(tmpdir(), 'marksmith-cli-convert-file-'));
+  const inputFile = path.join(inputDir, 'single.html');
+  const outputFile = path.join(inputDir, 'single.md');
+  await writeFile(inputFile, '<html><head><title>File Doc</title></head><body><p>Saved locally.</p></body></html>');
+
+  const exitCode = await run(['convert', '--input', inputFile, '--output', outputFile, '--no-title']);
+  assert.equal(exitCode, 0);
+
+  const output = await readFile(outputFile, 'utf8');
+  assert.doesNotMatch(output, /^# File Doc/);
+  assert.match(output, /Saved locally\./);
+});
+
+test('cli convert command refuses URL strings without fetching', async () => {
+  const inputDir = await mkdtemp(path.join(tmpdir(), 'marksmith-cli-url-'));
+  const inputFile = path.join(inputDir, 'url.txt');
+  await writeFile(inputFile, 'https://example.com/article');
+
+  await assert.rejects(
+    () => run(['convert', '--input', inputFile]),
+    /requires explicit fetchUrl: true/,
+  );
 });
 
 test('cli batch command shows help', async () => {

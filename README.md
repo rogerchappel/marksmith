@@ -36,7 +36,7 @@ to prepare the package manager environment and future dependency metadata.
 ```js
 import { htmlToMarkdown } from './src/converter/index.js';
 
-const { markdown, title } = htmlToMarkdown(`
+const markdown = htmlToMarkdown(`
   <!doctype html>
   <html>
     <head><title>Example Article</title></head>
@@ -45,10 +45,21 @@ const { markdown, title } = htmlToMarkdown(`
       <p>A <strong>local</strong> conversion with <a href="/docs">links</a>.</p>
     </body>
   </html>
-`, { includeTitle: true });
+`);
 
-console.log(title);    // Example Article
-console.log(markdown); // Markdown output
+console.log(markdown); // Markdown output headed with '# Example Article'
+```
+
+### Convert one local HTML file
+
+```sh
+node src/cli/index.js convert --input ./article.html --output ./article.md
+```
+
+You can also pipe HTML through stdin:
+
+```sh
+cat ./article.html | node src/cli/index.js convert > ./article.md
 ```
 
 ### Convert a folder of HTML files
@@ -89,20 +100,21 @@ Use `fetchUrl: true` only when the URL was intentionally provided by the user.
 
 ## Planned V1
 
-The current product brief focuses on a deterministic local converter that can:
+The current V1 provides a deterministic local converter that can:
 
-- accept pasted HTML or explicit URL input
-- extract useful content and preserve structure
-- emit clean Markdown with titles, links, code blocks, and metadata
-- support batch conversion for document folders
+- accept pasted HTML, local files, or explicit URL input through the JavaScript API
+- extract useful content and preserve common structure
+- emit clean Markdown with titles, links, lists, blockquotes, code blocks, and source metadata
+- support single-file CLI conversion and batch conversion for document folders
 - remain local-first by default
 
-See [docs/PRD.md](docs/PRD.md) for the scoped build plan.
+See [docs/PRD.md](docs/PRD.md) for the scoped build plan and remaining limitations.
 
 ## CLI reference
 
 ```sh
 node src/cli/index.js --help
+node src/cli/index.js convert [--input <file>] [--output <file>] [--no-title]
 node src/cli/index.js batch --input <folder> --output <folder> [--no-title]
 ```
 
