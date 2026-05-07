@@ -1,7 +1,8 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
-import { htmlToMarkdown } from './htmlToMarkdown.js';
+import { htmlToMarkdown } from './html-to-markdown.js';
+import { extractHtmlMetadata } from '../parser/html.js';
 import { collectHtmlFiles, toOutputPath } from '../parser/htmlFiles.js';
 
 export async function batchConvertFolder({ inputDir, outputDir, includeTitle = true } = {}) {
@@ -14,16 +15,17 @@ export async function batchConvertFolder({ inputDir, outputDir, includeTitle = t
 
   for (const sourceFile of sourceFiles) {
     const html = await readFile(sourceFile, 'utf8');
-    const { markdown, title } = htmlToMarkdown(html, { includeTitle });
+    const metadata = extractHtmlMetadata(html);
+    const markdown = htmlToMarkdown(html, { ...metadata, includeTitle });
     const destinationFile = toOutputPath(inputDir, outputDir, sourceFile);
 
     await mkdir(path.dirname(destinationFile), { recursive: true });
-    await writeFile(destinationFile, `${markdown}\n`, 'utf8');
+    await writeFile(destinationFile, markdown.endsWith('\n') ? markdown : `${markdown}\n`, 'utf8');
 
     results.push({
       inputFile: sourceFile,
       outputFile: destinationFile,
-      title,
+      title: metadata.title || null,
       markdown,
     });
   }

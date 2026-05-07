@@ -1,3 +1,3 @@
 ## Heading without title
 
- This document has no title tag.
+This document has no title tag.

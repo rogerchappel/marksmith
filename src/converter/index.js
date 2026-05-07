@@ -1,2 +1,2 @@
-export { htmlToMarkdown } from './htmlToMarkdown.js';
+export { htmlToMarkdown, convertInputToMarkdown } from './html-to-markdown.js';
 export { batchConvertFolder } from './batchConvertFolder.js';
