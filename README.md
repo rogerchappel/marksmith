@@ -145,16 +145,19 @@ bash scripts/validate.sh
 ```
 
 The validation script checks required repository files and runs available package
-scripts, including the Node test suite:
+scripts, including syntax checks, the Node test suite, and the fixture-backed CLI
+smoke:
 
 ```sh
+npm run check
 npm test
+npm run smoke
 ```
 
-You can also run the tests directly:
+For release readiness, run the combined package gate:
 
 ```sh
-node --test
+npm run release:check
 ```
 
 ## Contributing

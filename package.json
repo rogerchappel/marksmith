@@ -13,10 +13,16 @@
   },
   "files": [
     "src",
-    "README.md"
+    "README.md",
+    "docs",
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "scripts": {
-    "test": "node --test"
+    "check": "node --check src/cli/index.js && node --check src/converter/index.js && node --check src/parser/html.js",
+    "test": "node --test",
+    "smoke": "bash scripts/smoke.sh",
+    "release:check": "npm run check && npm test && npm run smoke && npm pack --dry-run"
   },
   "keywords": [
     "html",
@@ -26,5 +32,16 @@
     "agent-tools"
   ],
   "author": "Roger Chappel",
-  "license": "MIT"
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rogerchappel/marksmith.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rogerchappel/marksmith/issues"
+  },
+  "homepage": "https://github.com/rogerchappel/marksmith#readme"
 }
