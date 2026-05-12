@@ -50,7 +50,15 @@ const markdown = htmlToMarkdown(`
 console.log(markdown); // Markdown output headed with '# Example Article'
 ```
 
-### Convert one local HTML file
+### Convert local HTML from the CLI
+
+Convert an inline HTML snippet without creating a temporary input file:
+
+```sh
+node src/cli/index.js convert --html '<h1>Hello</h1><p>A <strong>local</strong> conversion.</p>'
+```
+
+Convert one local HTML file:
 
 ```sh
 node src/cli/index.js convert --input ./article.html --output ./article.md
@@ -114,7 +122,7 @@ See [docs/PRD.md](docs/PRD.md) for the scoped build plan and remaining limitatio
 
 ```sh
 node src/cli/index.js --help
-node src/cli/index.js convert [--input <file>] [--output <file>] [--no-title]
+node src/cli/index.js convert [--input <file> | --html <string>] [--output <file>] [--no-title]
 node src/cli/index.js batch --input <folder> --output <folder> [--no-title]
 ```
 
