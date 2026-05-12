@@ -8,12 +8,17 @@ function printHelp() {
   console.log(`marksmith
 
 Usage:
-  node src/cli/index.js convert [--input <file>] [--output <file>] [--no-title]
+  node src/cli/index.js convert [--input <file> | --html <string>] [--output <file>] [--no-title]
   node src/cli/index.js batch --input <folder> --output <folder> [--no-title]
 
 Commands:
-  convert  Convert one local HTML document from a file or stdin to Markdown.
+  convert  Convert one local HTML document from --html, a file, or stdin to Markdown.
   batch    Convert every .html/.htm file in a folder to Markdown.
+
+Examples:
+  node src/cli/index.js convert --html '<h1>Hello</h1><p>Local HTML.</p>'
+  node src/cli/index.js convert --input ./article.html --output ./article.md
+  cat ./article.html | node src/cli/index.js convert > ./article.md
 
 Local-first behavior:
   convert and batch never fetch URLs. Passing a URL string fails unless a caller
@@ -30,14 +35,21 @@ function parseArgs(argv) {
     switch (token) {
       case '--input':
       case '-i':
+        if (!rest[index + 1] || rest[index + 1].startsWith('-')) throw new Error(`${token} requires a value`);
         options.inputPath = rest[index + 1];
         options.inputDir = rest[index + 1];
         index += 1;
         break;
       case '--output':
       case '-o':
+        if (!rest[index + 1] || rest[index + 1].startsWith('-')) throw new Error(`${token} requires a value`);
         options.outputPath = rest[index + 1];
         options.outputDir = rest[index + 1];
+        index += 1;
+        break;
+      case '--html':
+        if (!rest[index + 1]) throw new Error('--html requires a value');
+        options.html = rest[index + 1];
         index += 1;
         break;
       case '--no-title':
@@ -67,9 +79,15 @@ async function readStdin() {
 }
 
 async function runConvert(options) {
-  const input = options.inputPath
-    ? await readFile(path.resolve(options.inputPath), 'utf8')
-    : await readStdin();
+  if (options.html !== undefined && options.inputPath) {
+    throw new Error('convert accepts either --html or --input, not both');
+  }
+
+  const input = options.html !== undefined
+    ? options.html
+    : options.inputPath
+      ? await readFile(path.resolve(options.inputPath), 'utf8')
+      : await readStdin();
 
   const markdown = await convertInputToMarkdown(input, {
     includeTitle: options.includeTitle !== false,

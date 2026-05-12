@@ -81,6 +81,32 @@ test('cli convert command writes one markdown document to a file', async () => {
   assert.match(output, /Saved locally\./);
 });
 
+test('cli convert command accepts inline HTML without stdin or temp files', async () => {
+  let output = '';
+  const originalWrite = process.stdout.write;
+  process.stdout.write = (chunk) => {
+    output += String(chunk);
+    return true;
+  };
+
+  try {
+    const exitCode = await run(['convert', '--html', '<h1>Inline</h1><p>Fast <em>local</em> conversion.</p>']);
+    assert.equal(exitCode, 0);
+  } finally {
+    process.stdout.write = originalWrite;
+  }
+
+  assert.match(output, /# Inline/);
+  assert.match(output, /Fast _local_ conversion\./);
+});
+
+test('cli convert command rejects conflicting inline and file input', async () => {
+  await assert.rejects(
+    () => run(['convert', '--html', '<p>Inline</p>', '--input', 'article.html']),
+    /either --html or --input/,
+  );
+});
+
 test('cli convert command refuses URL strings without fetching', async () => {
   const inputDir = await mkdtemp(path.join(tmpdir(), 'marksmith-cli-url-'));
   const inputFile = path.join(inputDir, 'url.txt');
