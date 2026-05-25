@@ -160,6 +160,7 @@ smoke:
 npm run check
 npm test
 npm run smoke
+npm run package:smoke
 ```
 
 For release readiness, run the combined package gate:
