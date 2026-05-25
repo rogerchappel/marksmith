@@ -22,7 +22,8 @@
     "check": "node --check src/cli/index.js && node --check src/converter/index.js && node --check src/parser/html.js",
     "test": "node --test",
     "smoke": "bash scripts/smoke.sh",
-    "release:check": "npm run check && npm test && npm run smoke && npm pack --dry-run"
+    "package:smoke": "bash scripts/package-smoke.sh",
+    "release:check": "npm run check && npm test && npm run smoke && npm run package:smoke"
   },
   "keywords": [
     "html",
