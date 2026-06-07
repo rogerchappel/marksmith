@@ -16,7 +16,8 @@
     "README.md",
     "docs",
     "LICENSE",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "SECURITY.md"
   ],
   "scripts": {
     "check": "node --check src/cli/index.js && node --check src/converter/index.js && node --check src/parser/html.js",
