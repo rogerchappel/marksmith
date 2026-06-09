@@ -181,3 +181,13 @@ See [SECURITY.md](SECURITY.md) for vulnerability reporting guidance.
 ## License
 
 MIT
+
+## Development
+
+Run the same checks locally before opening a PR:
+
+- `npm run check` - node --check src/cli/index.js && node --check src/converter/index.js && node --check src/parser/html.js
+- `npm test` - node --test
+- `npm run smoke` - bash scripts/smoke.sh
+- `npm run package:smoke` - bash scripts/package-smoke.sh
+- `npm run release:check` - npm run check && npm test && npm run smoke && npm run package:smoke
