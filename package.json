@@ -17,7 +17,8 @@
     "docs",
     "LICENSE",
     "CHANGELOG.md",
-    "SECURITY.md"
+    "SECURITY.md",
+    "CONTRIBUTING.md"
   ],
   "scripts": {
     "check": "node --check src/cli/index.js && node --check src/converter/index.js && node --check src/parser/html.js",
