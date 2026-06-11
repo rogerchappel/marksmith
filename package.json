@@ -18,7 +18,8 @@
     "LICENSE",
     "CHANGELOG.md",
     "SECURITY.md",
-    "CONTRIBUTING.md"
+    "CONTRIBUTING.md",
+    "CODE_OF_CONDUCT.md"
   ],
   "scripts": {
     "check": "node --check src/cli/index.js && node --check src/converter/index.js && node --check src/parser/html.js",
