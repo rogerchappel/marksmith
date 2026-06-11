@@ -1,6 +1,8 @@
 #!/usr/bin/env node
+import { realpathSync } from 'node:fs';
 import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { batchConvertFolder, convertInputToMarkdown } from '../converter/index.js';
 
@@ -124,7 +126,7 @@ async function runBatch(options) {
 export async function run(argv = process.argv.slice(2)) {
   const options = parseArgs(argv);
 
-  if (options.help || !options.command) {
+  if (options.help || !options.command || options.command === '--help' || options.command === '-h') {
     printHelp();
     return 0;
   }
@@ -140,7 +142,12 @@ export async function run(argv = process.argv.slice(2)) {
   throw new Error(`Unknown command: ${options.command}`);
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+function isDirectCliInvocation() {
+  if (!process.argv[1]) return false;
+  return realpathSync(fileURLToPath(import.meta.url)) === realpathSync(process.argv[1]);
+}
+
+if (isDirectCliInvocation()) {
   run().catch((error) => {
     console.error(error.message);
     process.exitCode = 1;
