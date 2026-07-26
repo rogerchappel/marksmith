@@ -112,7 +112,9 @@ The current V1 provides a deterministic local converter that can:
 
 - accept pasted HTML, local files, or explicit URL input through the JavaScript API
 - extract useful content and preserve common structure
-- emit clean Markdown with titles, links, lists, blockquotes, code blocks, and source metadata
+- emit clean Markdown with titles, links, nested ordered or unordered lists,
+  blockquotes, code blocks, and source metadata
+- choose safe code-block fences when preformatted content contains backticks
 - support single-file CLI conversion and batch conversion for document folders
 - remain local-first by default
 
