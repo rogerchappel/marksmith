@@ -147,7 +147,7 @@ test('htmlToMarkdown preserves nested and mixed list hierarchy', () => {
     '1. First',
     '   - Child **bold**',
     '   - Second child',
-    '      1. Grandchild',
+    '     1. Grandchild',
     '1. Last',
     '',
   ].join('\n'));
