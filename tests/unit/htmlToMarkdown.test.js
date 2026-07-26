@@ -120,6 +120,46 @@ test('htmlToMarkdown preserves code fence backticks in content', () => {
   assert.match(markdown, /Use `console.log/);
 });
 
+test('htmlToMarkdown uses a fence longer than backtick runs in preformatted code', () => {
+  const html = '<p>Before</p><pre><code>const fence = "```";\nnext();</code></pre><p>After</p>';
+  const markdown = htmlToMarkdown(html);
+
+  assert.equal(markdown, 'Before\n\n````\nconst fence = "```";\nnext();\n````\n\nAfter\n');
+});
+
+test('htmlToMarkdown preserves nested and mixed list hierarchy', () => {
+  const html = `
+    <ol>
+      <li>First
+        <ul>
+          <li>Child <strong>bold</strong></li>
+          <li>Second child
+            <ol><li>Grandchild</li></ol>
+          </li>
+        </ul>
+      </li>
+      <li>Last</li>
+    </ol>
+  `;
+  const markdown = htmlToMarkdown(html);
+
+  assert.equal(markdown, [
+    '1. First',
+    '   - Child **bold**',
+    '   - Second child',
+    '      1. Grandchild',
+    '1. Last',
+    '',
+  ].join('\n'));
+});
+
+test('htmlToMarkdown keeps block content around nested lists', () => {
+  const html = '<p>Intro</p><ul><li>Parent<ul><li>Child</li></ul></li></ul><p>Outro</p>';
+  const markdown = htmlToMarkdown(html);
+
+  assert.equal(markdown, 'Intro\n\n- Parent\n  - Child\n\nOutro\n');
+});
+
 test('htmlToMarkdown handles anchor links', () => {
   const html = '<p>See <a href="#section">section below</a></p>';
   const markdown = htmlToMarkdown(html);
