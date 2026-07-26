@@ -17,8 +17,6 @@ And an ordered list:
 Nested list:
 
 - Parent item
-
- Child item 1
-- Child item 2
-
- Another parent
+  - Child item 1
+  - Child item 2
+- Another parent

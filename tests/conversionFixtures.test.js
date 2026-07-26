@@ -7,6 +7,7 @@ const fixtures = [
   'minimal',
   'headings',
   'links',
+  'lists',
   'ignored-content',
 ];
 
