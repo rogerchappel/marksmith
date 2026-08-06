@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 import { mkdtemp, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -79,6 +80,43 @@ test('cli convert command writes one markdown document to a file', async () => {
   const output = await readFile(outputFile, 'utf8');
   assert.doesNotMatch(output, /^# File Doc/);
   assert.match(output, /Saved locally\./);
+});
+
+test('cli convert command rejects identical input and output without modifying the input', async () => {
+  const inputDir = await mkdtemp(path.join(tmpdir(), 'marksmith-cli-same-file-'));
+  const inputFile = path.join(inputDir, 'article.html');
+  const original = Buffer.from('<h1>Original</h1><p>Keep every byte.</p>\n');
+  await writeFile(inputFile, original);
+
+  const result = spawnSync(process.execPath, [
+    path.resolve('src/cli/index.js'),
+    'convert',
+    '--input', inputFile,
+    '--output', inputFile,
+  ], { encoding: 'utf8' });
+
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /same file/);
+  assert.deepEqual(await readFile(inputFile), original);
+});
+
+test('cli convert command rejects normalized input and output aliases without modifying the input', async () => {
+  const inputDir = await mkdtemp(path.join(tmpdir(), 'marksmith-cli-alias-'));
+  const inputFile = path.join(inputDir, 'article.html');
+  const outputAlias = path.join(inputDir, 'nested', '..', 'article.html');
+  const original = Buffer.from('<h1>Original</h1><p>Keep every byte.</p>\n');
+  await writeFile(inputFile, original);
+
+  const result = spawnSync(process.execPath, [
+    path.resolve('src/cli/index.js'),
+    'convert',
+    '--input', inputFile,
+    '--output', outputAlias,
+  ], { encoding: 'utf8' });
+
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /same file/);
+  assert.deepEqual(await readFile(inputFile), original);
 });
 
 test('cli convert command accepts inline HTML without stdin or temp files', async () => {
