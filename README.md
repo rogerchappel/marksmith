@@ -64,6 +64,10 @@ Convert one local HTML file:
 node src/cli/index.js convert --input ./article.html --output ./article.md
 ```
 
+The input and output must resolve to different files. `convert` rejects direct
+or normalized aliases of the input path before writing, so it cannot overwrite
+the source HTML in place.
+
 You can also pipe HTML through stdin:
 
 ```sh

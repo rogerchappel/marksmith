@@ -25,6 +25,7 @@ Examples:
 Local-first behavior:
   convert and batch never fetch URLs. Passing a URL string fails unless a caller
   uses the JavaScript API with explicit fetchUrl: true.
+  convert rejects an --output that resolves to the same file as --input.
 `);
 }
 
