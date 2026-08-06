@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { realpathSync } from 'node:fs';
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile, realpath, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -80,10 +80,36 @@ async function readStdin() {
   return input;
 }
 
+async function canonicalizeOutputPath(outputPath) {
+  const resolvedOutput = path.resolve(outputPath);
+
+  try {
+    return await realpath(resolvedOutput);
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+    return path.join(await realpath(path.dirname(resolvedOutput)), path.basename(resolvedOutput));
+  }
+}
+
+async function assertDistinctConvertPaths(inputPath, outputPath) {
+  if (!inputPath || !outputPath) return;
+
+  const [canonicalInput, canonicalOutput] = await Promise.all([
+    realpath(path.resolve(inputPath)),
+    canonicalizeOutputPath(outputPath),
+  ]);
+
+  if (canonicalInput === canonicalOutput) {
+    throw new Error('convert input and output must not refer to the same file');
+  }
+}
+
 async function runConvert(options) {
   if (options.html !== undefined && options.inputPath) {
     throw new Error('convert accepts either --html or --input, not both');
   }
+
+  await assertDistinctConvertPaths(options.inputPath, options.outputPath);
 
   const input = options.html !== undefined
     ? options.html
